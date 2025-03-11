@@ -1,0 +1,113 @@
+.header {
+  width: 80%;
+  height: 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #226ed1;
+  color: white;
+  padding: 0 10%;
+}
+
+.header ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.header li {
+  margin: 0 1rem;
+}
+
+.header a {
+  text-decoration: none;
+  color: white;
+  font-size: 1.25rem;
+}
+
+.header a:hover,
+.header a:active {
+  color: #b864da;
+}
+
+.header button {
+  font-size: 1.25rem;
+  background-color: #ffbb00;
+  border: 1px solid #ffbb00;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  color: #2c2922;
+}
+
+.header button:hover,
+.header button:active {
+  background-color: #ffa600;
+  border-color: #ffa600;
+}
+
+.post-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  margin: 20px auto 0 auto;
+  gap: 20px;
+}
+
+.post-item {
+  flex: 1 1 calc(33.33% - 20px);
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.post-item:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.post-detail {
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  width: 100%;
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.edit-btn, .delete-btn, .close-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.close-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
