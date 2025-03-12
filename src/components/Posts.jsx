@@ -1,55 +1,98 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import Post from "./Post.jsx";
 import PostDetail from "./PostDetail.jsx";
+import { fetchService } from "../service/fetchService.jsx";
 
 const Posts = () => {
-    const [newTitle, setNewTitle] = useState("");
-    const [selectedPost, setSelectedPost] = useState(null);
-    const [posts, setPosts] = useState([
-        {
-            id: 111,
-            title: "Happiness",
-            author: "John",
-            content: "This is the content in the post Happiness",
-        },
-        {
-            id: 112,
-            title: "MIU",
-            author: "Dean",
-            content: "This is the content in the post MIU",
-        },
-        {
-            id: 113,
-            title: "Enjoy Life",
-            author: "Jasmine",
-            content: "This is the content in the post Enjoy Life",
+    const [selectedPost, setSelectedPost] = useState([]);
+    const [posts, setPosts] = useState([]);
+    const fetchPosts = () => {
+        fetchService.get('posts')
+            .then(response => {
+                setPosts(response);
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
+    }
+
+    useEffect(() => {
+        fetchPosts()
+    }, [])
+    const submitPost = () => {
+        if (selectedPost && selectedPost.title.trim() === '') return;
+        if (selectedPost.id) {
+            fetchService.put('posts/'+selectedPost.id, {
+                id: selectedPost.id,
+                title: selectedPost.title,
+                author: selectedPost.author,
+                content: selectedPost.content,
+                userId: 1
+            })
+                .then(response => {
+                    fetchPosts()
+                })
+                .catch(error => {
+                    console.log(error.message)
+                })
+        } else {
+            fetchService.post('posts', {
+                title: selectedPost.title,
+                author: selectedPost.author,
+                content: selectedPost.content,
+                userId: 1
+            })
+                .then(response => {
+                    fetchPosts()
+                })
+                .catch(error => {
+                    console.log(error.message)
+                })
         }
-    ]);
-    const handleChangeTitle = () => {
-        if (!newTitle.trim()) return;
-        setPosts(posts.map(post =>
-            post.id === 111 ? { ...post, title: newTitle } : post
-        ));
-        setNewTitle("");
+        setSelectedPost([])
     };
+    const deletePost = (post) => {
+        fetchService.deleteAPI('posts/'+post.id)
+            .then(response => {
+                fetchPosts()
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
+    }
     return (
         <div className="post-container">
-            {posts.map((post) => (
+            {posts && posts.map((post) => (
                 <Post key={post.id} post={post} onClick={() => setSelectedPost(post)} />
             ))}
             <div className="changetitle">
                 <input
                     type="text"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="Enter new title"
+                    className="input"
+                    value={selectedPost.title ?? ''}
+                    onChange={(e) => setSelectedPost({ ...selectedPost, title: e.target.value })}
+                    placeholder="Enter title"
                 />
-                <button className="submit" onClick={handleChangeTitle}>
-                    Change Name
+                <input
+                    type="text"
+                    className="input"
+                    value={selectedPost.author ?? ''}
+                    onChange={(e) => setSelectedPost({ ...selectedPost, author: e.target.value })}
+                    placeholder="Enter author"
+                />
+                <input
+                    type="text"
+                    className="input input-content"
+                    value={selectedPost.content ?? ''}
+                    onChange={(e) => setSelectedPost({ ...selectedPost, content: e.target.value })}
+                    placeholder="Enter Content"
+                />
+                <button className="edit-btn" onClick={submitPost}>
+                    {selectedPost && selectedPost.id ? 'Update' : 'Create'} Post
                 </button>
             </div>
-            {selectedPost && (
-                <PostDetail post={selectedPost} onClose={() => setSelectedPost(null)} />
+            {selectedPost && selectedPost.id && (
+                <PostDetail post={selectedPost}  deletePost={() => deletePost(selectedPost)} onClose={() => setSelectedPost([])} />
             )}
         </div>
     );

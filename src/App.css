@@ -96,6 +96,13 @@
   cursor: pointer;
 }
 
+.input {
+  padding: 8px 12px;
+}
+.input-content{
+  width: 30%;
+}
+
 .edit-btn {
   background-color: #007bff;
   color: white;
@@ -110,4 +117,6 @@
   background-color: #6c757d;
   color: white;
 }
-
+.changetitle{
+  width: 100%;
+}
