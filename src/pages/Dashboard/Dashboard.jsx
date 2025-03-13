@@ -1,8 +1,11 @@
 import Posts from "../../components/Posts.jsx";
+import {SelectedIdProvider} from "../../context/SelectedId.jsx";
 
 const Dashboard = () => {
     return (
-        <Posts />
+        <SelectedIdProvider>
+            <Posts />
+        </SelectedIdProvider>
     );
 }
 

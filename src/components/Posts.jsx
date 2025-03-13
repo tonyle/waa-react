@@ -1,11 +1,13 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import Post from "./Post.jsx";
 import PostDetail from "./PostDetail.jsx";
 import { fetchService } from "../service/fetchService.jsx";
+import {SelectedIdContext} from "../context/SelectedId.jsx";
 
 const Posts = () => {
     const [selectedPost, setSelectedPost] = useState([]);
     const [posts, setPosts] = useState([]);
+    const { selectedId, setSelectedId } = useContext(SelectedIdContext);
     const fetchPosts = () => {
         fetchService.get('posts')
             .then(response => {
@@ -51,10 +53,11 @@ const Posts = () => {
         }
         setSelectedPost([])
     };
-    const deletePost = (post) => {
-        fetchService.deleteAPI('posts/'+post.id)
+    const deletePost = (postId) => {
+        fetchService.deleteAPI('posts/'+postId)
             .then(response => {
                 fetchPosts()
+                setSelectedId(null)
             })
             .catch(error => {
                 console.log(error.message)
@@ -63,7 +66,7 @@ const Posts = () => {
     return (
         <div className="post-container">
             {posts && posts.map((post) => (
-                <Post key={post.id} post={post} onClick={() => setSelectedPost(post)} />
+                <Post key={post.id} post={post} onClick={() => {setSelectedId(post.id)}} />
             ))}
             <div className="changetitle">
                 <input
@@ -91,8 +94,8 @@ const Posts = () => {
                     {selectedPost && selectedPost.id ? 'Update' : 'Create'} Post
                 </button>
             </div>
-            {selectedPost && selectedPost.id && (
-                <PostDetail post={selectedPost}  deletePost={() => deletePost(selectedPost)} onClose={() => setSelectedPost([])} />
+            {selectedId && (
+                <PostDetail deletePost={() => deletePost(selectedId)} onClose={() => setSelectedId(null)} />
             )}
         </div>
     );
