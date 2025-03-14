@@ -21,38 +21,6 @@ const Posts = () => {
     useEffect(() => {
         fetchPosts()
     }, [])
-    const submitPost = () => {
-        if (selectedPost && selectedPost.title.trim() === '') return;
-        if (selectedPost.id) {
-            fetchService.put('posts/'+selectedPost.id, {
-                id: selectedPost.id,
-                title: selectedPost.title,
-                author: selectedPost.author,
-                content: selectedPost.content,
-                userId: 1
-            })
-                .then(response => {
-                    fetchPosts()
-                })
-                .catch(error => {
-                    console.log(error.message)
-                })
-        } else {
-            fetchService.post('posts', {
-                title: selectedPost.title,
-                author: selectedPost.author,
-                content: selectedPost.content,
-                userId: 1
-            })
-                .then(response => {
-                    fetchPosts()
-                })
-                .catch(error => {
-                    console.log(error.message)
-                })
-        }
-        setSelectedPost([])
-    };
     const deletePost = (postId) => {
         fetchService.deleteAPI('posts/'+postId)
             .then(response => {
@@ -68,32 +36,6 @@ const Posts = () => {
             {posts && posts.map((post) => (
                 <Post key={post.id} post={post} onClick={() => {setSelectedId(post.id)}} />
             ))}
-            <div className="changetitle">
-                <input
-                    type="text"
-                    className="input"
-                    value={selectedPost.title ?? ''}
-                    onChange={(e) => setSelectedPost({ ...selectedPost, title: e.target.value })}
-                    placeholder="Enter title"
-                />
-                <input
-                    type="text"
-                    className="input"
-                    value={selectedPost.author ?? ''}
-                    onChange={(e) => setSelectedPost({ ...selectedPost, author: e.target.value })}
-                    placeholder="Enter author"
-                />
-                <input
-                    type="text"
-                    className="input input-content"
-                    value={selectedPost.content ?? ''}
-                    onChange={(e) => setSelectedPost({ ...selectedPost, content: e.target.value })}
-                    placeholder="Enter Content"
-                />
-                <button className="edit-btn" onClick={submitPost}>
-                    {selectedPost && selectedPost.id ? 'Update' : 'Create'} Post
-                </button>
-            </div>
             {selectedId && (
                 <PostDetail deletePost={() => deletePost(selectedId)} onClose={() => setSelectedId(null)} />
             )}
